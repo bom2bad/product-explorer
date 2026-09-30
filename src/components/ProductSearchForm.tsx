@@ -37,55 +37,23 @@ export default function ProductSearchForm(
       onSubmit={handleSubmit(onSearch)}
       noValidate
     >
-      <label htmlFor="q">
-        คำค้น
-      </label>
+      <div className="search-field">
+        <label htmlFor="q">คำค้น</label>
+        <input id="q" {...register("q")} placeholder="เช่น phone, laptop" />
+      </div>
 
-      <input
-        id="q"
-        {...register("q")}
-        placeholder="phone"
-      />
+      <div className="search-field">
+        <label htmlFor="limit">จำนวนรายการ</label>
+        <input id="limit" type="number" min="1" max="30" required {...register("limit", { valueAsNumber: true })} aria-invalid={!!errors.limit} aria-describedby="limit-error" />
+        <span className="field-error" id="limit-error" role="alert">{errors.limit?.message}</span>
+      </div>
 
-      <label htmlFor="limit">
-        จำนวนรายการ
-      </label>
-
-      <input
-        id="limit"
-        type="number"
-        required
-        {...register("limit", {
-          valueAsNumber: true,
-        })}
-        aria-invalid={!!errors.limit}
-        aria-describedby="limit-error"
-      />
-
-      <span
-        id="limit-error"
-        role="alert"
-      >
-        {errors.limit?.message}
-      </span>
-
-      <label htmlFor="sortBy">
-        เรียงตาม
-      </label>
-
-      <select
-        id="sortBy"
-        {...register("sortBy")}
-      >
-        {SORT_FIELDS.map((field) => (
-          <option
-            key={field}
-            value={field}
-          >
-            {field}
-          </option>
-        ))}
-      </select>
+      <div className="search-field">
+        <label htmlFor="sortBy">เรียงตาม</label>
+        <select id="sortBy" {...register("sortBy")}>
+          {SORT_FIELDS.map((field) => <option key={field} value={field}>{field}</option>)}
+        </select>
+      </div>
 
       <button
         type="submit"
@@ -93,7 +61,7 @@ export default function ProductSearchForm(
       >
         {isSubmitting
           ? "กำลังค้นหา"
-          : "ค้นหา"}
+          : "⌕  ค้นหา"}
       </button>
     </form>
   );

@@ -31,9 +31,12 @@ export const ProductListSchema = z.object({
   limit: z.number(),
 });
 
+export const ProductDraftSchema = ProductSchema.omit({ id: true });
+
 // เติม: ตัวช่วยของ Zod ที่อ่าน Type ออกมาจาก Schema
 export type Product     = z.infer<typeof ProductSchema>;
 export type ProductList = z.infer<typeof ProductListSchema>;
+export type ProductDraft = z.infer<typeof ProductDraftSchema>;
 
 const API_BASE = "https://dummyjson.com";
 
@@ -92,5 +95,17 @@ export async function fetchProducts(
     throw new Error("รูปแบบข้อมูลที่ได้รับไม่ตรงกับที่กำหนดไว้");
   }
 
+  return result.data;
+}
+
+export async function fetchCategories(): Promise<string[]> {
+  const response = await fetch(`${API_BASE}/products/category-list`);
+  if (!response.ok) {
+    throw new Error(`เรียกหมวดหมู่ไม่สำเร็จ สถานะ ${response.status}`);
+  }
+  const result = z.array(z.string()).safeParse(await response.json());
+  if (!result.success) {
+    throw new Error("รูปแบบหมวดหมู่ที่ได้รับไม่ถูกต้อง");
+  }
   return result.data;
 }
